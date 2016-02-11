@@ -1,0 +1,192 @@
+INTERNET DRAFT                                      Michiel B. de Jong
+Document: draft-dejong-httpl-00                                Mozilla
+
+Intended Status: Proposed Standard
+Expires: 11 March 2016                                11 February 2015
+
+
+                                httpl
+
+Abstract
+
+    This draft describes a URL scheme intended for connecting securely
+    to servers on a local network. It differs from the https scheme in
+    that it includes the fingerprint of the TLS certificate with which
+    the server's TLS certificate was signed, and is restricted to
+    local domainnames.
+
+Status of this Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 11 March 2016.
+
+Copyright Notice
+
+   Copyright (c) 2015 IETF Trust and the persons identified as the
+   document authors. All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (http://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+Table of Contents
+
+   1. Introduction...................................................2
+   2. Terminology....................................................2
+   3. Format.........................................................2
+   4. Usage..........................................................3
+   5. Security Considerations........................................4
+   6. IANA Considerations............................................4
+   7. Acknowledgments................................................4
+   8. References.....................................................5
+      8.1. Normative References......................................5
+      8.2. Informative References....................................5
+   9. Authors' address...............................................5
+
+
+1.  Introduction
+
+    The https URL scheme is useful for securely connecting to public
+    internet servers. On local networks, self-signed certificates
+    require a user to visually check the fingerprint of the signing
+    certificate, and the process of adding the certificate to the
+    client's list of trusted certificates is cumbersome.
+
+    This internet draft proposes the 'httpl' URL scheme to make this
+    easier for the user, and remove the risk of human errors when
+    checking the certificate's fingerprint.
+
+2. Terminology
+
+    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+    document are to be interpreted as described in RFC 2119 [WORDS].
+
+    "SHOULD" and "SHOULD NOT" are appropriate when valid exceptions to a
+    general requirement are known to exist or appear to exist, and it is
+    infeasible or impractical to enumerate all of them.  However, they
+    should not be interpreted as permitting implementors to fail to
+    implement the general requirement when such failure would result in
+    interoperability failure.
+
+3. Format
+
+    A httpl URL consist of the following parts:
+
+
+      "httpl:sha256-hex:" + <fingerprint> + "//"
+          + [ <domain name> | <IP address> ] + <path>
+
+    The <fingerprint> should be the SHA-256 hash of the signing
+    certificate provided by the web server, in hexadecimal format.
+    Example URL:
+
+    httpl:sha256-hex:30153418F09DDFDF32B445B1254B331EB7D9257BC3797F \
+    C2AF95BFA1866999FE//printer.local/index.html
+
+    We define a one-to-one mapping between a httpl URL and its
+    "corresponding https URL". To convert a httpl URL to its
+    corresponding https URL, replace the parts before the double slash
+    with the string "https:". To convert a https URL to its
+    corresponding httpl URL, replace the string "https:" with
+    "httpl:sha256-hex:" + <fingerprint>, with <fingerprint> as defined
+    above.
+
+    The string "sha256" refers to the hashing algorithm with which the
+    fingerprint was generated, and the string "hex" refers to the
+    format in which the fingerprint is represented. This scheme may be
+    extended to allow for other hashing algorithms and representation
+    formats.
+
+4. Usage
+
+    To retrieve and present the resource indicated by a httpl URL,
+    retrieve the resource indicated by its corresponding https URL,
+    and check that the TLS certificate presented by the server is
+    signed with a signing certificate, this signing certificate is also
+    present in the certificate chain presented by the server, and when
+    converted to a hexadecimal number, its SHA-256 hash corresponds to
+    the one specified in the URL.
+
+    If the fingerprint checks fails, clients MUST NOT retrieve the
+    resource requested, and present an error message.
+
+    Servers that are publically addressable should be referred to with
+    https URLs, so that clients can use the CA PKI to check the
+    certificate. The httpl scheme should only be used for servers that
+    are not publically addressable, and therefore cannot get their TLS
+    signed by a certificate authority.
+
+    The URL contains either a domain name or an IP address. In the
+    domain name case, the client SHOULD NOT retrieve the resource if
+    the domain name falls under the DNS root zone, and display an error
+    message instead. In the IP address case, the client SHOULD NOT
+    retrieve the resource if the IP address lies outside the Private
+    Address Space (for IPv4, see RFC1918 Section 3; for IPv6, see
+    RFC4193 Section 3).
+
+5. Security Considerations
+
+    An attacker could create a signing certificate whose SHA-256 hash
+    is identical to the one mentioned in the URL. However, this is
+    currently not considered technically feasible (right?).
+
+    There is no way to revoke a certificate, so that might be a
+    problem.
+
+    It is possible to update the TLS certificate of the server without
+    changing the URL, but when the signing certificate is updated, the
+    URL changes. This means that the manufacturer or administrator of
+    the server should be extra careful not to lose the signing
+    certificate, in case there is a future need to update the server's
+    TLS certificate without changing the URLs this server can be
+    addressed on.
+
+    The manufacturer or administrator of the server SHOULD NOT sign the
+    TLS certificate on the server itself, and the private key of the
+    signing certificate SHOULD stay on a trusted computer which is not
+    connected to any (public) network.
+
+    As mentioned in section 4, the httpl scheme SHOULD NOT be used for
+    addressing resources on servers that are connected to the global
+    internet; the https scheme already covers that use case in a better
+    way. The httpl scheme is strictly intended for use inside local
+    networks (the 'l' in 'httpl' refers to 'local').
+
+6. IANA Considerations
+
+    This document registers the 'httpl' URL scheme.
+
+7. Acknowledgements
+
+    The authors would like to thank the reader.
+
+8. References
+
+8.1. Normative References
+
+8.2. Informative References
+
+9. Authors' address
+
+    Michiel B. de Jong
+    Mozilla
+
+    Email: michiel@mozilla.com
