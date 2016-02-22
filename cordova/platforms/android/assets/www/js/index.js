@@ -54,8 +54,8 @@ var app = {
 app.initialize();
 
 function runCode(callback) {
-  var server = "https://build.phonegap.com";
-  var fingerprint = "2B 24 1B E0 D0 8C A6 41 68 C2 BB E3 60 0A DF 55 1A FC A8 45";
+  var server = "https://192.168.0.16:12346/";
+  var fingerprint = "17 C0 B5 AB C3 27 B4 86 94 06 E8 76 88 46 AC 77 8A C4 12 47";
 
   window.plugins.sslCertificateChecker.check(
       successCallback,
