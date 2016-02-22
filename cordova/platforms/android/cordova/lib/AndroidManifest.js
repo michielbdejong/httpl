@@ -129,7 +129,8 @@ AndroidManifest.prototype.getActivity = function() {
 });
 
 AndroidManifest.prototype.getDebuggable = function() {
-    return this.doc.getroot().find('./application').attrib['android:debuggable'] === 'true';
+    return true;
+    // return this.doc.getroot().find('./application').attrib['android:debuggable'] === 'true';
 };
 
 AndroidManifest.prototype.setDebuggable = function(value) {

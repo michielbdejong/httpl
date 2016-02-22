@@ -229,14 +229,14 @@ public class SystemWebViewClient extends WebViewClient {
         ApplicationInfo appInfo;
         try {
             appInfo = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-            if ((appInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0) {
+            //if ((appInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0) {
                 // debug = true
                 handler.proceed();
                 return;
-            } else {
-                // debug = false
-                super.onReceivedSslError(view, handler, error);
-            }
+            //} else {
+            //    // debug = false
+            //    super.onReceivedSslError(view, handler, error);
+            //}
         } catch (NameNotFoundException e) {
             // When it doubt, lock it out!
             super.onReceivedSslError(view, handler, error);

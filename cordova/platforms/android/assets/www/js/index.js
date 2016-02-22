@@ -45,6 +45,7 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         runCode(function(result) {
+          console.log('result', result);
           document.getElementById("1").innerHTML = result;
         });
         console.log('Received Event: ' + id);
@@ -54,8 +55,21 @@ var app = {
 app.initialize();
 
 function runCode(callback) {
-  var server = "https://192.168.0.16:12346/";
+  document.getElementById("1").innerHTML = 'enabling unsecure certs';
+  //cordova.plugins.certificates.trustUnsecureCerts(true);
+  document.getElementById("1").innerHTML = 'enabled unsecure certs';
+  var server = "https://build.phonegap.com";
   var fingerprint = "17 C0 B5 AB C3 27 B4 86 94 06 E8 76 88 46 AC 77 8A C4 12 47";
+  //
+  // var xhr = new XMLHttpRequest();
+  // xhr.open('GET', server);
+  // xhr.onload = function() {
+  //   document.getElementById("1").innerHTML = 'xhr onload';
+  //   document.getElementById("1").innerHTML = xhr.status;
+  //   console.log(xhr);
+  // }
+  // xhr.send();
+  // document.getElementById("1").innerHTML = 'xhr sent';
 
   window.plugins.sslCertificateChecker.check(
       successCallback,
