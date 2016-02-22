@@ -15,6 +15,10 @@
                         {
                             "xml": "<feature name=\"SSLCertificateChecker\"><param name=\"android-package\" value=\"nl.xservices.plugins.SSLCertificateChecker\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"CertificatesPlugin\"><param name=\"android-package\" value=\"de.martinreinhardt.cordova.plugins.CertificatesPlugin\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -26,6 +30,9 @@
             "PACKAGE_NAME": "io.cordova.hellocordova"
         },
         "cordova-plugin-sslcertificatechecker": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-certificates": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },
@@ -41,6 +48,13 @@
             "id": "cordova-plugin-sslcertificatechecker.SSLCertificateChecker",
             "clobbers": [
                 "window.plugins.sslCertificateChecker"
+            ]
+        },
+        {
+            "file": "plugins/cordova-plugin-certificates/www/certificate.js",
+            "id": "cordova-plugin-certificates.Certificates",
+            "clobbers": [
+                "cordova.plugins.certificates"
             ]
         }
     ]

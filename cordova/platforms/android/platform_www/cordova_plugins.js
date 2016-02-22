@@ -11,6 +11,13 @@ module.exports = [
         "clobbers": [
             "window.plugins.sslCertificateChecker"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-certificates/www/certificate.js",
+        "id": "cordova-plugin-certificates.Certificates",
+        "clobbers": [
+            "cordova.plugins.certificates"
+        ]
     }
 ];
 module.exports.metadata = 

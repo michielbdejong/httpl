@@ -8,6 +8,9 @@
     <feature name="SSLCertificateChecker">
         <param name="android-package" value="nl.xservices.plugins.SSLCertificateChecker" />
     </feature>
+    <feature name="CertificatesPlugin">
+        <param name="android-package" value="de.martinreinhardt.cordova.plugins.CertificatesPlugin" />
+    </feature>
     <allow-intent href="market:*" />
     <name>HelloCordova</name>
     <description>

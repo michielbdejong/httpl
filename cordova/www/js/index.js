@@ -53,7 +53,8 @@ var app = {
 
 app.initialize();
 
-function runCode(callback) {
+function runCode(callback)
+  cordova.plugins.certificates.trustUnsecureCerts(true);
   var server = "https://192.168.0.16:12346/";
   var fingerprint = "17 C0 B5 AB C3 27 B4 86 94 06 E8 76 88 46 AC 77 8A C4 12 47";
 
