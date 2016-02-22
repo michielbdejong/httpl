@@ -54,23 +54,10 @@ var app = {
 
 app.initialize();
 
-function runCode(callback) {
-  document.getElementById("1").innerHTML = 'enabling unsecure certs';
-  //cordova.plugins.certificates.trustUnsecureCerts(true);
-  document.getElementById("1").innerHTML = 'enabled unsecure certs';
-  var server = "https://build.phonegap.com";
-  var fingerprint = "17 C0 B5 AB C3 27 B4 86 94 06 E8 76 88 46 AC 77 8A C4 12 47";
-  //
-  // var xhr = new XMLHttpRequest();
-  // xhr.open('GET', server);
-  // xhr.onload = function() {
-  //   document.getElementById("1").innerHTML = 'xhr onload';
-  //   document.getElementById("1").innerHTML = xhr.status;
-  //   console.log(xhr);
-  // }
-  // xhr.send();
-  // document.getElementById("1").innerHTML = 'xhr sent';
+var fingerprint = "17 C0 B5 AB C3 27 B4 86 94 06 E8 76 88 46 AC 77 8A C4 12 47";
 
+function checkFingerprint(callback) {
+  var server = "https://build.phonegap.com";
   window.plugins.sslCertificateChecker.check(
       successCallback,
       errorCallback,
@@ -84,11 +71,27 @@ function runCode(callback) {
   }
 
   function errorCallback(message) {
-    callback('failure ' + message);
-    if (message == "CONNECTION_NOT_SECURE") {
-      // There is likely a man in the middle attack going on, be careful!
-    } else if (message.indexOf("CONNECTION_FAILED") >- 1) {
-      // There was no connection (yet). Internet may be down. Try again (a few times) after a little timeout.
-    }
+    console.log("updating fingerprint", fingerprint, message);
+    fingerprint = message;
+    checkFingerprint(callback);
   }
+}
+function runCode(callback) {
+  document.getElementById("1").innerHTML = 'enabling unsecure certs';
+  //cordova.plugins.certificates.trustUnsecureCerts(true);
+  document.getElementById("1").innerHTML = 'enabled unsecure certs';
+
+  checkFingerprint(callback);
+
+  //
+  // var xhr = new XMLHttpRequest();
+  // xhr.open('GET', server);
+  // xhr.onload = function() {
+  //   document.getElementById("1").innerHTML = 'xhr onload';
+  //   document.getElementById("1").innerHTML = xhr.status;
+  //   console.log(xhr);
+  // }
+  // xhr.send();
+  // document.getElementById("1").innerHTML = 'xhr sent';
+
 }
